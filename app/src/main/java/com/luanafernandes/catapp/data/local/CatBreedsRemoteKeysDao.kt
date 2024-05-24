@@ -12,7 +12,7 @@ interface CatBreedsRemoteKeysDao {
     suspend fun getRemoteKeys(id: String): CatBreedsRemoteKeysEntity
 
     @Query("DELETE FROM cat_breeds_remote_keys")
-    suspend fun clearRemoteKeys()
+    suspend fun deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(remoteKey: List<CatBreedsRemoteKeysEntity>)
