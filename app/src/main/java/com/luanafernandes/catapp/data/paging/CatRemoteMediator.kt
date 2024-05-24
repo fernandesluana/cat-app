@@ -6,24 +6,24 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.luanafernandes.catapp.data.local.CatBreedDatabase
+import com.luanafernandes.catapp.data.local.CatBreedEntity
 import com.luanafernandes.catapp.data.local.CatBreedsRemoteKeysEntity
 import com.luanafernandes.catapp.data.mappers.toCatBreedEntity
 import com.luanafernandes.catapp.data.remote.CatApi
-import com.luanafernandes.catapp.domain.model.CatBreed
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
 class CatRemoteMediator @Inject constructor(
     private val catApi: CatApi,
     private val catDatabase: CatBreedDatabase
-) : RemoteMediator<Int, CatBreed>() {
+) : RemoteMediator<Int, CatBreedEntity>() {
 
     private val catDao = catDatabase.catBreedsDao()
     private val catRemoteKeysDao = catDatabase.catBreedsRemoteKeysDao()
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, CatBreed>
+        state: PagingState<Int, CatBreedEntity>
     ): MediatorResult {
 
         return try {
@@ -81,7 +81,7 @@ class CatRemoteMediator @Inject constructor(
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(
-        state: PagingState<Int, CatBreed>
+        state: PagingState<Int, CatBreedEntity>
     ): CatBreedsRemoteKeysEntity? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { id ->
@@ -91,7 +91,7 @@ class CatRemoteMediator @Inject constructor(
     }
 
     private suspend fun getRemoteKeyForFirstItem(
-        state: PagingState<Int, CatBreed>
+        state: PagingState<Int, CatBreedEntity>
     ): CatBreedsRemoteKeysEntity? {
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { unsplashImage ->
@@ -100,7 +100,7 @@ class CatRemoteMediator @Inject constructor(
     }
 
     private suspend fun getRemoteKeyForLastItem(
-        state: PagingState<Int, CatBreed>
+        state: PagingState<Int, CatBreedEntity>
     ): CatBreedsRemoteKeysEntity? {
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { unsplashImage ->
