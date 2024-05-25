@@ -6,7 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.luanafernandes.catapp.data.local.CatBreedDatabase
-import com.luanafernandes.catapp.data.local.CatBreedEntity
+import com.luanafernandes.catapp.data.local.entities.CatBreedEntity
 import com.luanafernandes.catapp.data.paging.CatRemoteMediator
 import com.luanafernandes.catapp.data.remote.CatApi
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +30,7 @@ class CatRepository @Inject constructor(
         ).flow
     }
 
-    
+
 
 
 }

@@ -1,4 +1,4 @@
-package com.luanafernandes.catapp.data.local
+package com.luanafernandes.catapp.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -12,7 +12,9 @@ data class CatBreedEntity(
     val name: String,
     val origin: String,
     val referenceImageId: String?,
-    val temperament: String
+    val temperament: String,
+    val isFavourite: Boolean = false,
+    val imageUrl: String
 ){
 
 }

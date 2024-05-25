@@ -1,4 +1,4 @@
-package com.luanafernandes.catapp.data.local
+package com.luanafernandes.catapp.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -8,6 +8,7 @@ data class CatBreedsRemoteKeysEntity(
     @PrimaryKey
     val id: String,
     val prevPage: Int?,
-    val nextPage: Int?
+    val nextPage: Int?,
+
 ) {
 }

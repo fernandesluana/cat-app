@@ -1,15 +1,17 @@
 package com.luanafernandes.catapp.data.paging
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.luanafernandes.catapp.data.local.CatBreedDatabase
-import com.luanafernandes.catapp.data.local.CatBreedEntity
-import com.luanafernandes.catapp.data.local.CatBreedsRemoteKeysEntity
+import com.luanafernandes.catapp.data.local.entities.CatBreedEntity
+import com.luanafernandes.catapp.data.local.entities.CatBreedsRemoteKeysEntity
 import com.luanafernandes.catapp.data.mappers.toCatBreedEntity
 import com.luanafernandes.catapp.data.remote.CatApi
+import com.luanafernandes.catapp.data.remote.CatImageInfoDto
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
@@ -18,6 +20,7 @@ class CatRemoteMediator @Inject constructor(
     private val catDatabase: CatBreedDatabase
 ) : RemoteMediator<Int, CatBreedEntity>() {
 
+
     private val catDao = catDatabase.catBreedsDao()
     private val catRemoteKeysDao = catDatabase.catBreedsRemoteKeysDao()
 
@@ -25,7 +28,7 @@ class CatRemoteMediator @Inject constructor(
         loadType: LoadType,
         state: PagingState<Int, CatBreedEntity>
     ): MediatorResult {
-
+    Log.e("CatRemoteMediator", "load: $loadType")
         return try {
             val currentPage = when (loadType) {
                 LoadType.REFRESH -> {
@@ -53,6 +56,7 @@ class CatRemoteMediator @Inject constructor(
             }
 
             val response = catApi.getCats(page = currentPage, limit = 15)
+            Log.d("CatRemoteMediator", "load api.getCats: ${response}")
             val endOfPaginationReached = response.isEmpty()
 
             val prevPage = if (currentPage == 1) null else currentPage - 1
@@ -72,10 +76,24 @@ class CatRemoteMediator @Inject constructor(
                 }
 
                 catRemoteKeysDao.insertAll(keys)
-                catDao.insertAll(response.map { it.toCatBreedEntity() })
+
+                val imageUrls = response.associate { catBreed ->
+                    val images: List<CatImageInfoDto> = catApi.getCatImage(catBreed.id)
+                    val imageUrl = images.firstOrNull()?.url
+                    catBreed.id to imageUrl
+                }
+
+                val catBreedsWithImages = response.map { catBreed ->
+                    catBreed.toCatBreedEntity(imageUrl = imageUrls[catBreed.id] ?: "")
+                }
+
+                catDao.insertAll(catBreedsWithImages)
+                Log.e("CatRemoteMediator", "load: catbreedsImages: $catBreedsWithImages")
+
             }
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (e: Exception) {
+            Log.e("CatRemoteMediator", "Error loading cats", e)
             MediatorResult.Error(e)
         }
     }

@@ -1,9 +1,10 @@
-package com.luanafernandes.catapp.data.local
+package com.luanafernandes.catapp.data.local.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.luanafernandes.catapp.data.local.entities.CatBreedsRemoteKeysEntity
 
 @Dao
 interface CatBreedsRemoteKeysDao {
