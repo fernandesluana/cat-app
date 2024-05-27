@@ -9,8 +9,14 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.luanafernandes.catapp.data.mappers.toCatBreed
-import com.luanafernandes.catapp.data.repository.CatRepository
 import com.luanafernandes.catapp.domain.model.CatBreed
+import com.luanafernandes.catapp.domain.use_case.CheckIsFavoriteUseCase
+import com.luanafernandes.catapp.domain.use_case.GetAllCatsUseCase
+import com.luanafernandes.catapp.domain.use_case.GetAverageLifespanOfFavoriteCatsUseCase
+import com.luanafernandes.catapp.domain.use_case.GetCatByIdUseCase
+import com.luanafernandes.catapp.domain.use_case.GetCatByNameUseCase
+import com.luanafernandes.catapp.domain.use_case.GetFavoriteCatsUseCase
+import com.luanafernandes.catapp.domain.use_case.ToggleFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -20,16 +26,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SharedViewModel @Inject constructor(
-    private val repository: CatRepository
+    private val getAllCatsUseCase: GetAllCatsUseCase,
+    private val getCatByIdUseCase: GetCatByIdUseCase,
+    private val getCatByNameUseCase: GetCatByNameUseCase,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    private val getFavoriteCatsUseCase: GetFavoriteCatsUseCase,
+    private val checkIsFavoriteUseCase: CheckIsFavoriteUseCase,
+    private val getAverageLifespanOfFavoriteBreedsUseCase: GetAverageLifespanOfFavoriteCatsUseCase
 ) : ViewModel() {
 
     private val _catBreed = MutableLiveData<CatBreed>()
     val catBreed: LiveData<CatBreed> get() = _catBreed
 
     val favoriteCats: LiveData<List<CatBreed>> =
-    repository.getFavoriteCats().asLiveData()
+    getFavoriteCatsUseCase().asLiveData()
 
-    val getAllCats: Flow<PagingData<CatBreed>> = repository.getAllCats()
+    val getAllCats: Flow<PagingData<CatBreed>> = getAllCatsUseCase()
         .map { pagingData ->
             pagingData.map { catBreedEntity ->
                 catBreedEntity.toCatBreed()
@@ -39,23 +51,23 @@ class SharedViewModel @Inject constructor(
 
     fun toggleFavorite(catId: String, isFavorite: Boolean) {
         viewModelScope.launch {
-            repository.toggleFavorite(catId, isFavorite)
+            toggleFavoriteUseCase(catId, isFavorite)
         }
     }
 
     suspend fun isFavorite(catId: String): Boolean {
-        return repository.isFavorite(catId)
+        return checkIsFavoriteUseCase(catId)
     }
 
     fun fetchCatBreedById(catId: String) {
         viewModelScope.launch {
-            val cat = repository.getCatBreed(catId)
+            val cat = getCatByIdUseCase(catId)
             _catBreed.value = cat
         }
     }
 
     fun getCatBreeds(query: String): Flow<PagingData<CatBreed>> {
-        return repository.searchCatBreeds(query)
+        return getCatByNameUseCase(query)
             .map { pagingData ->
                 pagingData.map { catBreedEntity ->
                     catBreedEntity.toCatBreed()
@@ -64,6 +76,6 @@ class SharedViewModel @Inject constructor(
             .cachedIn(viewModelScope)
     }
 
-    val averageLifespan: Flow<Int> = repository.getAverageLifespanOfFavoriteBreeds()
+    val averageLifespan: Flow<Int> = getAverageLifespanOfFavoriteBreedsUseCase()
 
 }

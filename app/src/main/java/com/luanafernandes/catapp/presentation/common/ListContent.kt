@@ -142,7 +142,7 @@ fun CatBreedItem(
                 Text(
                     text = catBreed.name,
                     color = Color.White,
-                    fontSize = 16.sp
+                    fontSize = 14.sp
                 )
             }
             Box(
