@@ -6,7 +6,8 @@ data class CatBreed(
     val lifeSpan: String,
     val name: String,
     val origin: String,
-    val referenceImageId: String?,
-    val temperament: String
+    val temperament: String,
+    val imageUrl: String,
+    val isFavorite: Boolean = false
 ) {
 }

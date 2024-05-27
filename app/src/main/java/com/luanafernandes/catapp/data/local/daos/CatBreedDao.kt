@@ -19,8 +19,11 @@ interface CatBreedDao {
     @Query("SELECT * FROM cat_breed")
     fun getAllCatBreeds(): PagingSource<Int, CatBreedEntity>
 
-    @Query("SELECT * FROM cat_breed WHERE isFavourite = 1")
-    fun getFavoriteCatBreeds(): PagingSource<Int, CatBreedEntity>
+    @Query("SELECT * FROM cat_breed WHERE id = :id")
+    suspend fun getCatBreedById(id: String): CatBreedEntity
+
+    @Query("SELECT * FROM cat_breed WHERE name LIKE :query")
+    fun getCatBreedsByName(query: String): PagingSource<Int, CatBreedEntity>
 
 
 }

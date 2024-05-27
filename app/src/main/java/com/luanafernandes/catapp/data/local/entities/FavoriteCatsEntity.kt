@@ -3,8 +3,8 @@ package com.luanafernandes.catapp.data.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "cat_breed")
-data class CatBreedEntity(
+@Entity(tableName = "favorite_cats")
+data class FavoriteCatsEntity(
     @PrimaryKey(autoGenerate = false)
     val id: String,
     val description: String,
@@ -13,6 +13,6 @@ data class CatBreedEntity(
     val origin: String,
     val temperament: String,
     val imageUrl: String
-){
-
+)
+ {
 }

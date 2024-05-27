@@ -13,7 +13,7 @@ interface CatApi {
 
     @GET("/v1/images/search")
     suspend fun getCatImage(
-        @Query("breed_ids") id: String,
+        @Query("breed_ids") id: String
     ): List<CatImageInfoDto>
 
 
