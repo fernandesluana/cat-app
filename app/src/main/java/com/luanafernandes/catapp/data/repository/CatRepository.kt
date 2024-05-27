@@ -66,6 +66,10 @@ class CatRepository @Inject constructor(
         return catDatabase.favoriteCatsDao().getFavoriteCatById(catId) != null
     }
 
+    fun getAverageLifespanOfFavoriteBreeds(): Flow<Int> {
+        return catDatabase.favoriteCatsDao().getAverageLifespan()
+    }
+
 
 
 }

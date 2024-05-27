@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -30,6 +31,8 @@ fun FavoritesScreen(
     val viewModel: SharedViewModel = hiltViewModel()
     val favoriteCats by viewModel.favoriteCats.observeAsState(emptyList())
 
+    val averageLifespan by viewModel.averageLifespan.collectAsState(initial = 0)
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -43,6 +46,8 @@ fun FavoritesScreen(
             modifier = Modifier
                 .padding(top = 25.dp)
         )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(text = "Average Lifespan of your favorite Breeds: $averageLifespan years")
         Spacer(modifier = Modifier.height(8.dp))
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),

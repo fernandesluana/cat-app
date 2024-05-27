@@ -64,4 +64,6 @@ class SharedViewModel @Inject constructor(
             .cachedIn(viewModelScope)
     }
 
+    val averageLifespan: Flow<Int> = repository.getAverageLifespanOfFavoriteBreeds()
+
 }
