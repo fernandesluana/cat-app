@@ -16,10 +16,7 @@ interface CatApi {
         @Query("breed_ids") id: String
     ): List<CatImageInfoDto>
 
-
-
     companion object {
         const val BASE_URL = "https://api.thecatapi.com/"
-        const val API_KEY = ""
     }
 }

@@ -6,38 +6,44 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 class CheckIsFavoriteUseCaseTest {
 
     private val repository = mockk<CatRepositoryImpl>()
-    private val checkIsFavorite = CheckIsFavoriteUseCase(repository)
+    private lateinit var checkIsFavorite: CheckIsFavoriteUseCase
+
+    @Before
+    fun setup() {
+        checkIsFavorite = CheckIsFavoriteUseCase(repository)
+    }
 
     @Test
-    fun checkIsFavorite_returnsTrue() = runBlocking {
-        //GIVEN
+    fun `checkIsFavorite with existing favorite ID returns true`() = runBlocking {
+        // GIVEN
         val id = "CHS1"
         val listOfFavorites = FavoriteCatsFactory.favoriteCats
         coEvery { repository.isFavorite(id) } returns listOfFavorites.any { it.id == id }
 
-        //WHEN
+        // WHEN
         val result = checkIsFavorite(id)
 
-        //THEN
+        // THEN
         Assert.assertTrue(result)
     }
 
     @Test
-    fun checkIsFavorite_returnsFalse() = runBlocking {
-        //GIVEN
+    fun `checkIsFavorite with non-existing favorite ID returns false`() = runBlocking {
+        // GIVEN
         val id = "ABC1"
         val listOfFavorites = FavoriteCatsFactory.favoriteCats
         coEvery { repository.isFavorite(id) } returns listOfFavorites.any { it.id == id }
 
-        //WHEN
+        // WHEN
         val result = checkIsFavorite(id)
 
-        //THEN
+        // THEN
         Assert.assertFalse(result)
     }
 }

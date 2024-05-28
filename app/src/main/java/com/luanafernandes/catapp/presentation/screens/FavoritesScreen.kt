@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,10 +29,9 @@ fun FavoritesScreen(
     navController: NavController
 ){
     val viewModel: SharedViewModel = hiltViewModel()
+
     val favoriteCats by viewModel.favoriteCats.observeAsState(emptyList())
-
     val averageLifespan by viewModel.averageLifespan.collectAsState(initial = 0)
-
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -47,23 +46,28 @@ fun FavoritesScreen(
                 .padding(top = 25.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = "Average Lifespan of your favorite Breeds: $averageLifespan years")
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(
-                start = 8.dp,
-                end = 12.dp,
-                bottom = 60.dp
-            )
-        ) {
-            items(favoriteCats) { catBreed ->
-                CatBreedItem(
-                    catBreed = catBreed,
-                    navController = navController,
-                    viewModel = viewModel
+        if (favoriteCats.isNotEmpty()) {
+            Text(text = "Average Lifespan of your favorite Breeds: $averageLifespan years")
+            Spacer(modifier = Modifier.height(8.dp))
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(
+                    start = 8.dp,
+                    end = 12.dp,
+                    bottom = 60.dp
                 )
+            ) {
+
+                items(favoriteCats) { catBreed ->
+                    CatBreedItem(
+                        catBreed = catBreed,
+                        navController = navController,
+                        viewModel = viewModel
+                    )
+                }
             }
+        } else {
+            Text(text = "You don't have any favorite cats yet.")
         }
     }
 }

@@ -6,15 +6,21 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
+import org.junit.Before
 import org.junit.Test
 
 class ToggleFavoriteUseCaseTest {
 
     private val repository = mockk<CatRepositoryImpl>()
-    private val toggleFavoriteUseCase = ToggleFavoriteUseCase(repository)
+    private lateinit var toggleFavoriteUseCase: ToggleFavoriteUseCase
+
+    @Before
+    fun setUp() {
+        toggleFavoriteUseCase = ToggleFavoriteUseCase(repository)
+    }
 
     @Test
-    fun toggleFavorite_turnTrue_whenFavoriteIsFalse() = runBlocking {
+    fun `test if favorite cat is add to list when true`() = runBlocking {
         // GIVEN
         val newFavoriteCat = FavoriteCatsEntity(
             id = "AVR2",
@@ -40,7 +46,7 @@ class ToggleFavoriteUseCaseTest {
     }
 
     @Test
-    fun toggleFavorite_turnFalse_whenFavoriteIsTrue() = runBlocking {
+    fun `test if favorite cat is removed from list when false`() = runBlocking {
         // GIVEN
         val newFavoriteCat = FavoriteCatsEntity(
             name = "Bombay",

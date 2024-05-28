@@ -37,7 +37,7 @@ object CatBreedFactory {
             name = "Chausie",
             description = "Chausie Cat",
             id = "CHS1",
-            lifeSpan = "11 - 11",
+            lifeSpan = "11 - 13",
             origin = "United Kingdom",
             temperament = "outgoing, active",
             isFavorite = false,
