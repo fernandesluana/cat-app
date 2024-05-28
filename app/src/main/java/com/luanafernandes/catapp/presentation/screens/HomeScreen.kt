@@ -72,7 +72,6 @@ fun HomeScreen(
 
         val catBreeds = if (searchQuery.value.isEmpty()) {
             homeViewModel.getAllCats.collectAsLazyPagingItems()
-
         } else {
             homeViewModel.getCatBreeds(searchQuery.value).collectAsLazyPagingItems()
         }

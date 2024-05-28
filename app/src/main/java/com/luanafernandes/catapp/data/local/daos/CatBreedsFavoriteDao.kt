@@ -20,8 +20,8 @@ interface CatBreedsFavoriteDao {
     @Query("SELECT * FROM favorite_cats")
     fun getFavoriteCats(): Flow<List<FavoriteCatsEntity>>
 
-    @Query("SELECT * FROM favorite_cats WHERE id = :catId")
-    suspend fun getFavoriteCatById(catId: String): FavoriteCatsEntity
+    @Query("SELECT EXISTS(SELECT 1 FROM favorite_cats WHERE id = :id)")
+    suspend fun containsId(id: String): Boolean
 
     @Query("SELECT AVG(CAST(SUBSTR(lifespan, 1, 2) AS INTEGER)) FROM favorite_cats")
     fun getAverageLifespan(): Flow<Int> // Assuming lifespan is in the format "XX - YY" where XX is the lower value and YY is the higher value

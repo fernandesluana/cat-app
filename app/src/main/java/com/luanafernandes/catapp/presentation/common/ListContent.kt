@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
@@ -49,7 +50,6 @@ fun ListContent(
     navController: NavController,
     viewModel: SharedViewModel,
 ) {
-
     LazyVerticalGrid(
         //modifier = Modifier.fillMaxSize(),
         columns = GridCells.Fixed(2),
@@ -59,14 +59,35 @@ fun ListContent(
             bottom = 60.dp
         )
     ) {
-        items(
-            count = items.itemCount,
-            key = items.itemKey { it.id },
-            contentType = items.itemContentType { "catBreedItem" }
-        ) { index ->
-            val catBreed = items[index]
-            catBreed?.let { CatBreedItem(catBreed = it, navController, viewModel) }
+        when (items.loadState.refresh) {
+            is LoadState.Loading -> {
+                item {
+                    Text(text = "Loading items...",
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(20.dp))
+                }
+            }
+            is LoadState.Error -> {
+                item {
+                    Text(text = "Error loading items...",
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(start = 20.dp, top = 20.dp))
+                }
+            }
+            else ->  {
+                items(
+                    count = items.itemCount,
+                    key = items.itemKey { it.id },
+                    contentType = items.itemContentType { "catBreedItem" }
+                ) { index ->
+                    val catBreed = items[index]
+                    catBreed?.let { CatBreedItem(catBreed = it, navController, viewModel) }
+                }
+            }
         }
+
+
+
     }
 }
 

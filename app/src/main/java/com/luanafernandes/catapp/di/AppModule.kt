@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import com.luanafernandes.catapp.data.local.CatBreedDatabase
 import com.luanafernandes.catapp.data.remote.CatApi
-import com.luanafernandes.catapp.data.repository.CatRepository
+import com.luanafernandes.catapp.data.repository.CatRepositoryImpl
 import com.luanafernandes.catapp.domain.use_case.CheckIsFavoriteUseCase
 import com.luanafernandes.catapp.domain.use_case.GetAllCatsUseCase
-import com.luanafernandes.catapp.domain.use_case.GetAverageLifespanOfFavoriteCatsUseCase
+import com.luanafernandes.catapp.domain.use_case.GetAverageLifespanUseCase
 import com.luanafernandes.catapp.domain.use_case.GetCatByIdUseCase
 import com.luanafernandes.catapp.domain.use_case.GetCatByNameUseCase
 import com.luanafernandes.catapp.domain.use_case.GetFavoriteCatsUseCase
@@ -51,50 +51,50 @@ object AppModule {
     fun provideCatRepository(
         catApi: CatApi,
         catDatabase: CatBreedDatabase
-    ): CatRepository {
-        return CatRepository(catApi, catDatabase)
+    ): CatRepositoryImpl {
+        return CatRepositoryImpl(catApi, catDatabase)
     }
 
     @Provides
     @Singleton
-    fun provideGetAllCatsUseCase(repository: CatRepository): GetAllCatsUseCase {
+    fun provideGetAllCatsUseCase(repository: CatRepositoryImpl): GetAllCatsUseCase {
         return GetAllCatsUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideGetCatByIdUseCase(repository: CatRepository): GetCatByIdUseCase {
+    fun provideGetCatByIdUseCase(repository: CatRepositoryImpl): GetCatByIdUseCase {
         return GetCatByIdUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideGetCatByNameUseCase(repository: CatRepository): GetCatByNameUseCase {
+    fun provideGetCatByNameUseCase(repository: CatRepositoryImpl): GetCatByNameUseCase {
         return GetCatByNameUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideToggleFavoriteUseCase(repository: CatRepository): ToggleFavoriteUseCase {
+    fun provideToggleFavoriteUseCase(repository: CatRepositoryImpl): ToggleFavoriteUseCase {
         return ToggleFavoriteUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideGetFavoriteCatsUseCase(repository: CatRepository): GetFavoriteCatsUseCase {
+    fun provideGetFavoriteCatsUseCase(repository: CatRepositoryImpl): GetFavoriteCatsUseCase {
         return GetFavoriteCatsUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideIsFavoriteUseCase(repository: CatRepository): CheckIsFavoriteUseCase {
+    fun provideIsFavoriteUseCase(repository: CatRepositoryImpl): CheckIsFavoriteUseCase {
         return CheckIsFavoriteUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideGetAverageLifespanOfFavoriteBreedsUseCase(repository: CatRepository): GetAverageLifespanOfFavoriteCatsUseCase {
-        return GetAverageLifespanOfFavoriteCatsUseCase(repository)
+    fun provideGetAverageLifespanOfFavoriteBreedsUseCase(repository: CatRepositoryImpl): GetAverageLifespanUseCase {
+        return GetAverageLifespanUseCase(repository)
     }
 
 }

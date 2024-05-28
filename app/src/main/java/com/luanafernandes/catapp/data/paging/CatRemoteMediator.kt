@@ -1,5 +1,7 @@
 package com.luanafernandes.catapp.data.paging
 
+import android.database.sqlite.SQLiteException
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -11,9 +13,11 @@ import com.luanafernandes.catapp.data.local.entities.CatBreedsRemoteKeysEntity
 import com.luanafernandes.catapp.data.mappers.toCatBreedEntity
 import com.luanafernandes.catapp.data.remote.CatApi
 import com.luanafernandes.catapp.data.remote.CatImageInfoDto
+import okio.IOException
+import retrofit2.HttpException
 
 @OptIn(ExperimentalPagingApi::class)
-class CatRemoteMediator (
+class CatRemoteMediator(
     private val catApi: CatApi,
     private val catDatabase: CatBreedDatabase
 ) : RemoteMediator<Int, CatBreedEntity>() {
@@ -84,8 +88,18 @@ class CatRemoteMediator (
                 catDao.insertAll(catBreedsWithImages)
             }
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+        } catch (e: IOException) {
+            Log.e("CatRemoteMediator", "Network error: ${e.message}", e)
+            return MediatorResult.Error(e)
+        } catch (e: HttpException) {
+            Log.e("CatRemoteMediator", "HTTP error: ${e.message}", e)
+            return MediatorResult.Error(e)
+        } catch (e: SQLiteException) {
+            Log.e("CatRemoteMediator", "Database error: ${e.message}", e)
+            return MediatorResult.Error(e)
         } catch (e: Exception) {
-            MediatorResult.Error(e)
+            Log.e("CatRemoteMediator", "Unexpected error: ${e.message}", e)
+            return MediatorResult.Error(e)
         }
     }
 

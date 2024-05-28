@@ -1,6 +1,7 @@
 package com.luanafernandes.catapp.presentation.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -8,6 +9,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
@@ -57,7 +61,10 @@ fun RowScope.AddItem(
 ){
     BottomNavigationItem(
         label = {
-                Text(text = screen.title)
+                Text(text = screen.title,
+                    color = Color.White,
+                    fontSize = 16.sp
+                )
         },
         icon = {},
         selected = currentDestination?.hierarchy?.any {
@@ -65,6 +72,8 @@ fun RowScope.AddItem(
         } == true,
         onClick = {
             navController.navigate(screen.route)
-        }
+        },
+        modifier = Modifier.background(Color.Black)
+
     )
 }

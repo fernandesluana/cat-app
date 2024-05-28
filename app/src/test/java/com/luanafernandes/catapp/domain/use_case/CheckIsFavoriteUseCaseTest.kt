@@ -1,0 +1,43 @@
+package com.luanafernandes.catapp.domain.use_case
+
+import com.luanafernandes.catapp.data.repository.CatRepositoryImpl
+import com.luanafernandes.catapp.domain.model.FavoriteCatsFactory
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert
+import org.junit.Test
+
+class CheckIsFavoriteUseCaseTest {
+
+    private val repository = mockk<CatRepositoryImpl>()
+    private val checkIsFavorite = CheckIsFavoriteUseCase(repository)
+
+    @Test
+    fun checkIsFavorite_returnsTrue() = runBlocking {
+        //GIVEN
+        val id = "CHS1"
+        val listOfFavorites = FavoriteCatsFactory.favoriteCats
+        coEvery { repository.isFavorite(id) } returns listOfFavorites.any { it.id == id }
+
+        //WHEN
+        val result = checkIsFavorite(id)
+
+        //THEN
+        Assert.assertTrue(result)
+    }
+
+    @Test
+    fun checkIsFavorite_returnsFalse() = runBlocking {
+        //GIVEN
+        val id = "ABC1"
+        val listOfFavorites = FavoriteCatsFactory.favoriteCats
+        coEvery { repository.isFavorite(id) } returns listOfFavorites.any { it.id == id }
+
+        //WHEN
+        val result = checkIsFavorite(id)
+
+        //THEN
+        Assert.assertFalse(result)
+    }
+}

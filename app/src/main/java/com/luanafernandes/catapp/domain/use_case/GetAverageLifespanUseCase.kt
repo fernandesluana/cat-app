@@ -1,12 +1,13 @@
 package com.luanafernandes.catapp.domain.use_case
 
 import com.luanafernandes.catapp.data.repository.CatRepositoryImpl
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class ToggleFavoriteUseCase @Inject constructor(
+class GetAverageLifespanUseCase @Inject constructor(
     private val repository: CatRepositoryImpl
 ) {
-    suspend operator fun invoke(catId: String, isFavorite: Boolean) {
-        repository.toggleFavorite(catId, isFavorite)
+    operator fun invoke(): Flow<Int> {
+        return repository.getAverageLifespan()
     }
 }

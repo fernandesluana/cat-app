@@ -12,7 +12,7 @@ import com.luanafernandes.catapp.data.mappers.toCatBreed
 import com.luanafernandes.catapp.domain.model.CatBreed
 import com.luanafernandes.catapp.domain.use_case.CheckIsFavoriteUseCase
 import com.luanafernandes.catapp.domain.use_case.GetAllCatsUseCase
-import com.luanafernandes.catapp.domain.use_case.GetAverageLifespanOfFavoriteCatsUseCase
+import com.luanafernandes.catapp.domain.use_case.GetAverageLifespanUseCase
 import com.luanafernandes.catapp.domain.use_case.GetCatByIdUseCase
 import com.luanafernandes.catapp.domain.use_case.GetCatByNameUseCase
 import com.luanafernandes.catapp.domain.use_case.GetFavoriteCatsUseCase
@@ -32,7 +32,7 @@ class SharedViewModel @Inject constructor(
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val getFavoriteCatsUseCase: GetFavoriteCatsUseCase,
     private val checkIsFavoriteUseCase: CheckIsFavoriteUseCase,
-    private val getAverageLifespanOfFavoriteBreedsUseCase: GetAverageLifespanOfFavoriteCatsUseCase
+    private val getAverageLifespanUseCase: GetAverageLifespanUseCase
 ) : ViewModel() {
 
     private val _catBreed = MutableLiveData<CatBreed>()
@@ -76,6 +76,6 @@ class SharedViewModel @Inject constructor(
             .cachedIn(viewModelScope)
     }
 
-    val averageLifespan: Flow<Int> = getAverageLifespanOfFavoriteBreedsUseCase()
+    val averageLifespan: Flow<Int> = getAverageLifespanUseCase()
 
 }

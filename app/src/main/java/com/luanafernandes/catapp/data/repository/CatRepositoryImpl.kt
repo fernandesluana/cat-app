@@ -12,17 +12,18 @@ import com.luanafernandes.catapp.data.mappers.toFavoriteCatsEntity
 import com.luanafernandes.catapp.data.paging.CatRemoteMediator
 import com.luanafernandes.catapp.data.remote.CatApi
 import com.luanafernandes.catapp.domain.model.CatBreed
+import com.luanafernandes.catapp.domain.repository.CatRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class CatRepository @Inject constructor(
+class CatRepositoryImpl @Inject constructor(
     private val catApi: CatApi,
     private val catDatabase: CatBreedDatabase,
-) {
+): CatRepository {
 
-    fun getAllCats(): Flow<PagingData<CatBreedEntity>> {
+    override fun getAllCats(): Flow<PagingData<CatBreedEntity>> {
         val pagingSourceFactory = { catDatabase.catBreedsDao().getAllCatBreeds() }
         return Pager(
             config = PagingConfig(
@@ -34,18 +35,18 @@ class CatRepository @Inject constructor(
         ).flow
     }
 
-    fun searchCatBreeds(query: String): Flow<PagingData<CatBreedEntity>> {
+    override fun searchCatBreeds(query: String): Flow<PagingData<CatBreedEntity>> {
         return Pager(
             config = PagingConfig(pageSize = 12),
             pagingSourceFactory = { catDatabase.catBreedsDao().getCatBreedsByName("%$query%") }
         ).flow
     }
 
-    suspend fun getCatBreed(id: String): CatBreed {
+    override suspend fun getCatById(id: String): CatBreed {
         return catDatabase.catBreedsDao().getCatBreedById(id).toCatBreed()
     }
 
-    suspend fun toggleFavorite(catId: String, isFavorite: Boolean) {
+    override suspend fun toggleFavorite(catId: String, isFavorite: Boolean) {
         val catBreed = catDatabase.catBreedsDao().getCatBreedById(catId)
         val favoriteCatEntity = catBreed.toFavoriteCatsEntity()
         if (isFavorite) {
@@ -55,18 +56,18 @@ class CatRepository @Inject constructor(
         }
     }
 
-    fun getFavoriteCats(): Flow<List<CatBreed>> {
+    override fun getFavoriteCats(): Flow<List<CatBreed>> {
         return catDatabase.favoriteCatsDao().getFavoriteCats()
             .map { favoriteCatsEntities ->
                 favoriteCatsEntities.map { it.toCatBreed() }
             }
     }
 
-    suspend fun isFavorite(catId: String): Boolean {
-        return catDatabase.favoriteCatsDao().getFavoriteCatById(catId) != null
+    override suspend fun isFavorite(catId: String): Boolean {
+        return catDatabase.favoriteCatsDao().containsId(catId)
     }
 
-    fun getAverageLifespanOfFavoriteBreeds(): Flow<Int> {
+    override fun getAverageLifespan(): Flow<Int> {
         return catDatabase.favoriteCatsDao().getAverageLifespan()
     }
 
